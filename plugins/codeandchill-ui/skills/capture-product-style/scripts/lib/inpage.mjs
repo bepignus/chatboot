@@ -484,7 +484,7 @@ export function discoverLinks() {
   const clean = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
   const demoText = /(live\s*)?(demo|preview)|vista\s*previa|ver\s*demo|ver\s*en\s*vivo|en\s*vivo|ver\s*plantilla|live\s*site/i;
   const demoHost = /vercel\.app|netlify\.app|framer\.(website|app|ai)|webflow\.io|github\.io|pages\.dev|surge\.sh|onrender\.com|fly\.dev|stackblitz|codesandbox/i;
-  const productPath = /\/(products?|templates?|themes?|items?|kits?|plantillas?|productos?|shop|store|l)\/[^/?#]+/i;
+  const productPath = /\/(products?|templates?|components?|blocks?|themes?|items?|kits?|plantillas?|componentes?|productos?|shop|store|l)\/[^/?#]+/i;
   const out = { products: [], demos: [], images: [] };
   const seen = new Set();
   for (const a of document.querySelectorAll('a[href]')) {
