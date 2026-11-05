@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fixture — Paper (light, flat)</title>
+<!-- Deliberately different from reference.html: light, flat, serif headings, square corners, no motion. -->
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #faf7f2; color: #1f1d1a; font: 17px/1.7 Georgia, "Times New Roman", serif; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  header { border-bottom: 2px solid #1f1d1a; }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+  header a { color: #1f1d1a; margin-left: 18px; font-size: 15px; }
+  h1 { font-size: 52px; line-height: 1.1; font-weight: 400; margin: 72px 0 20px; }
+  h2 { font-size: 32px; font-weight: 400; margin: 56px 0 24px; }
+  p { color: #5b564f; }
+  .btn { display: inline-block; padding: 10px 18px; background: #c2410c; color: #fff; text-decoration: none; font-family: Arial, sans-serif; font-size: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  .card { border: 2px solid #1f1d1a; padding: 22px; background: #fff; }
+  footer { margin-top: 80px; padding: 30px 0; border-top: 2px solid #1f1d1a; font-size: 14px; }
+</style>
+</head>
+<body>
+  <header><div class="wrap"><strong>paper</strong><nav><a href="#">Essays</a><a href="#">About</a></nav></div></header>
+  <main>
+    <div class="wrap">
+      <h1>Quiet tools for careful writers</h1>
+      <p>A neutral fixture paragraph used only to exercise the style comparison script with a clearly different look.</p>
+      <p style="margin-top:24px"><a class="btn" href="#">Start writing</a></p>
+      <h2>Features</h2>
+      <div class="grid">
+        <div class="card"><h3>Drafts</h3><p>Fixture card text describing a feature in one or two lines.</p></div>
+        <div class="card"><h3>Notes</h3><p>Fixture card text describing a feature in one or two lines.</p></div>
+      </div>
+    </div>
+  </main>
+  <footer><div class="wrap">paper © fixture</div></footer>
+</body>
+</html>

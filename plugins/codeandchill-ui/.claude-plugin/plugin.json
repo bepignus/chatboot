@@ -1,0 +1,11 @@
+{
+  "name": "codeandchill-ui",
+  "version": "0.1.0",
+  "description": "Desarrolla interfaces al estilo de las plantillas que se venden en codeandchill.store: captura su ADN visual (paleta, tipografía, layout, componentes, motion) y lo aplica a interfaces nuevas.",
+  "author": {
+    "name": "bepignus"
+  },
+  "repository": "https://github.com/bepignus/chatboot",
+  "license": "MIT",
+  "keywords": ["ui", "design-system", "templates", "tailwind", "style-capture"]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "chatboot",
+  "owner": {
+    "name": "bepignus"
+  },
+  "metadata": {
+    "description": "Plugins de Claude Code de bepignus."
+  },
+  "plugins": [
+    {
+      "name": "codeandchill-ui",
+      "source": "./plugins/codeandchill-ui",
+      "description": "Desarrolla interfaces al estilo de las plantillas que se venden en codeandchill.store: captura su ADN visual (paleta, tipografía, layout, componentes, motion) y lo aplica a interfaces nuevas.",
+      "version": "0.1.0",
+      "category": "design",
+      "keywords": ["ui", "design-system", "templates", "tailwind", "style-capture"]
+    }
+  ]
+}

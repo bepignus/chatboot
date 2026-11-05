@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fixture — Orbit (dark)</title>
+<!-- Neutral test page for the capture/compare scripts. Not a reproduction of any real product. -->
+<style>
+  :root {
+    --fx-bg: #0b0d12;
+    --fx-surface: #141821;
+    --fx-text: #e8eaf0;
+    --fx-muted: #8b93a7;
+    --fx-border: #232937;
+    --fx-accent: #7c5cff;
+    --fx-accent-2: #22d3ee;
+    --fx-radius: 14px;
+    --fx-font: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --fx-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 var(--fx-font); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  header { position: sticky; top: 0; z-index: 10; background: rgba(11, 13, 18, .7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--fx-border); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 24px; }
+  header nav { display: flex; gap: 24px; }
+  header nav a { color: var(--fx-muted); text-decoration: none; font-size: 14px; transition: color .2s ease; }
+  header nav a:hover { color: var(--fx-text); }
+  .logo { font-weight: 700; letter-spacing: -.02em; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease; }
+  .btn-primary { background: linear-gradient(135deg, var(--fx-accent), var(--fx-accent-2)); color: #fff; box-shadow: 0 8px 30px -8px rgba(124, 92, 255, .6); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px -10px rgba(124, 92, 255, .8); }
+  .btn-ghost { border: 1px solid var(--fx-border); color: var(--fx-text); background: transparent; }
+  .btn-ghost:hover { background: var(--fx-surface); }
+  .hero { min-height: 88vh; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 48px; padding: 96px 0; }
+  .eyebrow { font: 500 12px/1 var(--fx-mono); text-transform: uppercase; letter-spacing: .14em; color: var(--fx-accent-2); }
+  h1 { font-size: 64px; line-height: 1.05; letter-spacing: -.03em; font-weight: 700; margin: 18px 0; }
+  h1 span { background: linear-gradient(90deg, var(--fx-accent), var(--fx-accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--fx-muted); font-size: 18px; max-width: 520px; margin-bottom: 32px; }
+  .actions { display: flex; gap: 12px; }
+  .mock { height: 420px; border-radius: 20px; background: radial-gradient(circle at 30% 20%, rgba(124,92,255,.35), transparent 60%), var(--fx-surface); border: 1px solid var(--fx-border); box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  section { padding: 96px 0; }
+  h2 { font-size: 40px; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 40px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: var(--fx-surface); border: 1px solid var(--fx-border); border-radius: var(--fx-radius); padding: 28px; transition: border-color .25s ease, transform .25s ease; }
+  .card:hover { border-color: var(--fx-accent); transform: translateY(-4px); }
+  .card h3 { font-size: 20px; margin: 16px 0 8px; }
+  .card p { color: var(--fx-muted); font-size: 15px; }
+  .pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; background: rgba(124, 92, 255, .15); color: #b9a8ff; }
+  .icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(34, 211, 238, .12); display: grid; place-items: center; }
+  form { display: flex; gap: 12px; max-width: 480px; }
+  input { flex: 1; background: var(--fx-surface); border: 1px solid var(--fx-border); border-radius: 999px; padding: 12px 18px; color: var(--fx-text); font: inherit; }
+  footer { border-top: 1px solid var(--fx-border); padding: 48px 0; color: var(--fx-muted); font-size: 14px; }
+  footer .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  footer ul { list-style: none; padding: 0; }
+  footer a { color: var(--fx-muted); text-decoration: none; }
+  @media (max-width: 760px) {
+    header nav { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 48px 0; }
+    h1 { font-size: 40px; }
+    .grid, footer .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="logo">orbit</div>
+      <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Docs</a><a href="#">Changelog</a></nav>
+      <button class="btn btn-ghost" aria-label="menu">Sign in</button>
+    </div>
+  </header>
+  <main>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">v2.0 · now in beta</div>
+          <h1>Ship interfaces <span>at orbit speed</span></h1>
+          <p class="lead">A neutral fixture paragraph used only to exercise the style capture script with realistic structure.</p>
+          <div class="actions"><a class="btn btn-primary" href="#">Get started</a><a class="btn btn-ghost" href="#">Live demo</a></div>
+        </div>
+        <div class="mock"></div>
+      </div>
+    </div>
+    <section>
+      <div class="wrap">
+        <h2>Everything you need</h2>
+        <div class="grid">
+          <div class="card"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#22d3ee"/></svg></div><h3>Components</h3><p>Fixture card text describing a feature in one or two lines.</p><span class="pill">New</span></div>
+          <div class="card"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="#22d3ee"/></svg></div><h3>Themes</h3><p>Fixture card text describing a feature in one or two lines.</p><span class="pill">Pro</span></div>
+          <div class="card"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 20 12 4l8 16z" fill="#22d3ee"/></svg></div><h3>Motion</h3><p>Fixture card text describing a feature in one or two lines.</p><span class="pill">Beta</span></div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <h2>Stay in the loop</h2>
+        <form onsubmit="return false"><input placeholder="you@example.com"><button class="btn btn-primary" type="submit">Subscribe</button></form>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap cols">
+      <div>orbit © fixture</div>
+      <ul><li><a href="#">Product</a></li><li><a href="#">Pricing</a></li></ul>
+      <ul><li><a href="#">Docs</a></li><li><a href="#">Blog</a></li></ul>
+      <ul><li><a href="#">Twitter</a></li><li><a href="#">GitHub</a></li></ul>
+    </div>
+  </footer>
+</body>
+</html>

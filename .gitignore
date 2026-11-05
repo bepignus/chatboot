@@ -1,0 +1,5 @@
+# Capturas locales de estilo (screenshots de productos de terceros: no se versionan)
+.captures/
+node_modules/
+*-workspace/
+.DS_Store
