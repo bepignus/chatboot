@@ -485,7 +485,7 @@ export function discoverLinks() {
   const demoText = /(live\s*)?(demo|preview)|vista\s*previa|ver\s*demo|ver\s*en\s*vivo|en\s*vivo|ver\s*plantilla|live\s*site/i;
   const demoHost = /vercel\.app|netlify\.app|framer\.(website|app|ai)|webflow\.io|github\.io|pages\.dev|surge\.sh|onrender\.com|fly\.dev|stackblitz|codesandbox/i;
   const productPath = /\/(products?|templates?|components?|blocks?|themes?|items?|kits?|plantillas?|componentes?|productos?|shop|store|l)\/[^/?#]+/i;
-  const out = { products: [], demos: [], images: [] };
+  const out = { products: [], demos: [], images: [], videos: [] };
   const seen = new Set();
   for (const a of document.querySelectorAll('a[href]')) {
     let u;
@@ -508,6 +508,12 @@ export function discoverLinks() {
     if ((img.naturalWidth >= 600 || r.width >= 400) && img.currentSrc) out.images.push(img.currentSrc);
   }
   out.images = [...new Set(out.images)].slice(0, 8);
+  // Product reels/promo videos: the first ones on a product page usually belong to that product.
+  for (const vd of document.querySelectorAll('video')) {
+    const src = vd.currentSrc || vd.src || (vd.querySelector('source') || {}).src;
+    if (src && !src.startsWith('blob:')) out.videos.push(src);
+  }
+  out.videos = [...new Set(out.videos)].slice(0, 6);
   out.title = document.title;
   out.h1 = clean((document.querySelector('h1') || {}).innerText, 120);
   return out;

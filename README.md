@@ -33,7 +33,8 @@ cp -r plugins/codeandchill-ui/skills/* ~/.claude/skills/
    Claude ejecuta el extractor, revisa las capturas, escribe una ficha por producto y sintetiza
    la guía del catálogo y los tokens (`tokens.css`, tema de Tailwind v4 y preset de v3).
 
-   Conviene hacerlo **dentro de este repo** para que la guía quede versionada en
+   El catálogo ya está capturado (2026-11-05). Repite este paso solo para añadir productos o
+   refrescar la guía. Conviene hacerlo **dentro de este repo** para que la guía quede versionada en
    `plugins/codeandchill-ui/skills/codeandchill-ui/references/`, y luego hacer commit. Si capturas
    desde otro proyecto, el resultado se guarda en `.codeandchill/` de ese proyecto.
 

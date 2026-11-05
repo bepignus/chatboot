@@ -68,9 +68,20 @@ export function aggregate(raw) {
   const spacing = [...spacingMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 16).map(([v, w]) => ({ px: v, count: w }));
   const totalSp = spacing.reduce((s, x) => s + x.count, 0) || 1;
   const share = (n) => spacing.filter((s) => s.px % n === 0).reduce((s, x) => s + x.count, 0) / totalSp;
-  const baseUnit = share(8) >= 0.7 ? 8 : share(4) >= 0.7 ? 4 : null;
+  const grid4 = Math.round(share(4) * 100);
+  const grid8 = Math.round(share(8) * 100);
+  const baseUnit = grid8 >= 65 ? 8 : grid4 >= 60 ? 4 : null;
   const radii = (t.radius || []).slice(0, 8).map((r) => ({ value: r.value, count: r.weight }));
-  const dominantRadius = (radii.find((r) => r.value !== 'full') || {}).value || null;
+  // Dominant radius = what cards/panels use (the shape you notice), not avatars or progress bars.
+  const isPx = (v) => /^\d+(\.\d+)?px$/.test(String(v));
+  const mostCommon = (vals) => {
+    const m = new Map();
+    for (const v of vals.filter(isPx)) m.set(v, (m.get(v) || 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).map(([v]) => v)[0] || null;
+  };
+  const cardRadius = mostCommon((raw.components.cards || []).flatMap((c) => Array(c.count).fill(c.radius)));
+  const buttonRadius = mostCommon((raw.components.buttons || []).flatMap((c) => Array(c.count).fill(c.radius)));
+  const dominantRadius = cardRadius || (radii.find((r) => isPx(r.value)) || {}).value || null;
   const shadows = (t.shadow || []).slice(0, 6).map((s) => ({ value: s.value, count: s.weight }));
 
   return {
@@ -93,8 +104,8 @@ export function aggregate(raw) {
       gradients: (t.gradient || []).slice(0, 5).map((g) => g.value),
     },
     type: { headingFamily, bodyFamily, families: families.slice(0, 6), monoUsed, scaleSizes: scaleSizes.slice(0, 14), scale: scale.slice(0, 18), uppercase: (t.uppercase || []).slice(0, 5), tags: ts },
-    spacing: { baseUnit, values: spacing },
-    shape: { radii, dominantRadius, shadows, borderWidths: (t.borderWidth || []).slice(0, 5), textShadows: (t.textShadow || []).slice(0, 3) },
+    spacing: { baseUnit, grid4, grid8, values: spacing },
+    shape: { radii, dominantRadius, cardRadius, buttonRadius, shadows, borderWidths: (t.borderWidth || []).slice(0, 5), textShadows: (t.textShadow || []).slice(0, 3) },
     layout: { maxWidths: (t.maxWidth || []).slice(0, 6), grids: (t.grid || []).slice(0, 8), sections: raw.sections, docHeight: raw.doc.height },
     effects: { backdrop: (t.backdrop || []).slice(0, 4), filters: (t.filter || []).slice(0, 4), blend: (t.blend || []).slice(0, 4) },
     motion: { transitions: (t.transition || []).slice(0, 8), animations: (t.animation || []).slice(0, 8), keyframes: raw.css.keyframes },
@@ -172,7 +183,8 @@ export function summaryMarkdown(raw, agg, extra = {}) {
   lines.push(`- Radii (by element count): ${agg.shape.radii.map((r) => `${r.value}×${r.count}`).join(' · ') || 'none'}`);
   lines.push(`- Border widths: ${agg.shape.borderWidths.map((b) => `${b.value}×${b.weight}`).join(' · ') || 'none'}`);
   lines.push(`- Spacing values (px × uses): ${agg.spacing.values.map((s) => `${s.px}×${s.count}`).join(' · ')}`);
-  lines.push(`- Inferred base unit: ${agg.spacing.baseUnit ? agg.spacing.baseUnit + 'px' : 'irregular'}`);
+  lines.push(`- Inferred base unit: ${agg.spacing.baseUnit ? agg.spacing.baseUnit + 'px' : 'irregular'} (values on a 4px grid: ${agg.spacing.grid4}% · 8px grid: ${agg.spacing.grid8}%)`);
+  lines.push(`- Card radius: ${agg.shape.cardRadius || '—'} · Button radius: ${agg.shape.buttonRadius || '—'}`);
   lines.push('- Box shadows:');
   lines.push(list(agg.shape.shadows, (s) => `\`${s.value}\` ×${s.count}`));
   if (agg.effects.backdrop.length) lines.push(`- Backdrop filters: ${agg.effects.backdrop.map((b) => b.value).join(' · ')}`);

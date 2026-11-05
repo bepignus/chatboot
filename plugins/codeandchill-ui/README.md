@@ -30,12 +30,19 @@ En versiones anteriores de Claude Code: `/plugin marketplace add bepignus/chatbo
 | `/codeandchill-ui:ui <qué construir>` | Atajo para construir |
 | `scripts/capture_style.mjs` | Extractor con Playwright: `summary.md`, `capture.json`, capturas desktop y móvil, recortes de componentes; modo `--discover` para tiendas |
 | `scripts/compare_style.mjs` | Puntuación de fidelidad (0–100) por dimensión, con la lista de deltas a corregir |
+| `scripts/extract_frames.mjs` | Fotogramas y hoja de contactos de un vídeo de producto (componentes sin demo en vivo); requiere ffmpeg |
 
 ## Estado
 
-La guía de estilo está en `skills/codeandchill-ui/references/style-guide.md` y su estado es
-**pendiente de captura**. Mientras siga así, `codeandchill-ui` se niega a improvisar el estilo y
-pide ejecutar primero la captura.
+**Capturado el 2026-11-05**: 18 demos en vivo y 10 vídeos de componentes, sobre un inventario de
+149 plantillas y 75 componentes. Todo está en `skills/codeandchill-ui/references/`:
+
+| archivo | contenido |
+| --- | --- |
+| `style-guide.md` | ADN común, variantes, color, tipografía, layout, recetas de componentes, motion, voz y checklist |
+| `products/*.md` | fichas por familia (studio-light, studio-dark, studio-glass, editorial, playful, micro-interactions) con valores medidos por producto |
+| `tokens.css` | 8 variantes por `data-cc-variant` |
+| `tailwind.theme.css` / `tailwind.preset.cjs` | Tailwind v4 y v3 |
 
 ## Requisitos
 

@@ -41,7 +41,7 @@ function loadPlaywright() {
 
 // ----------------------------------------------------------------------------- args
 function parseArgs(argv) {
-  const o = { targets: [], out: '.captures', wait: 1200, mobile: true, components: true, maxSegments: 8, discover: null, deep: false, limit: 24, name: null };
+  const o = { targets: [], out: '.captures', wait: 1200, mobile: true, components: true, maxSegments: 8, discover: null, deep: false, limit: 24, name: null, ignore: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const next = () => argv[++i];
@@ -54,6 +54,9 @@ function parseArgs(argv) {
     else if (a === '--discover') o.discover = next();
     else if (a === '--deep') o.deep = true;
     else if (a === '--limit') o.limit = Number(next());
+    else if (a === '--reaggregate') o.reaggregate = true;
+    else if (a === '--ignore') o.ignore.push(next());
+    else if (a === '--scroll-shots') o.scrollShots = true;
     else if (a === '-h' || a === '--help') o.help = true;
     else if (a.startsWith('--')) throw new Error(`Unknown flag ${a}`);
     else o.targets.push(a);
@@ -65,7 +68,10 @@ const HELP = `capture_style.mjs — extract palette, typography, spacing, compon
 
   node capture_style.mjs https://demo.example.com [more targets] --out .captures
   node capture_style.mjs ./my-template/            (folder with index.html)
+  node capture_style.mjs <url> --ignore ".store-badge" (remove chrome injected by the demo host; repeatable)
+  node capture_style.mjs <url> --scroll-shots      (viewport shots while scrolling: for scroll-driven landings)
   node capture_style.mjs --discover https://store.example.com --deep
+  node capture_style.mjs --reaggregate .captures/<slug> [...]   (rebuild summary.md from capture.json)
 `;
 
 // ----------------------------------------------------------------------------- helpers
@@ -136,6 +142,21 @@ async function gotoSettled(page, url, wait) {
   await page.waitForTimeout(wait);
 }
 
+// Removes elements that are not part of the product (e.g. a "Buy this template" pill the store
+// injects into every demo) so they don't pollute palettes, fonts and screenshots.
+async function removeIgnored(page, selectors) {
+  if (!selectors || !selectors.length) return;
+  await page.evaluate((sels) => {
+    for (const sel of sels) {
+      try {
+        document.querySelectorAll(sel).forEach((el) => el.remove());
+      } catch (e) {
+        /* invalid selector: ignore */
+      }
+    }
+  }, selectors);
+}
+
 async function autoScroll(page) {
   // Triggers lazy-loading and scroll-reveal animations, then returns to the top.
   await page.evaluate(async () => {
@@ -166,6 +187,26 @@ async function segmentedScreenshots(page, dir, prefix, width, segHeight, maxSegm
     files.push(name);
   }
   if (total > n * segHeight) files.push(`(page truncated: ${total}px tall, captured first ${n * segHeight}px — raise --max-segments to see more)`);
+  return files;
+}
+
+// Scroll-driven pages (reveal on enter, scrubbed video, pinned sections) render blank areas in a
+// full-page screenshot. Viewport shots taken while scrolling show what a visitor actually sees.
+async function scrollShots(page, dir, maxShots) {
+  const files = [];
+  const { total, vh } = await page.evaluate(() => ({ total: document.documentElement.scrollHeight, vh: window.innerHeight }));
+  const steps = Math.min(maxShots, Math.max(1, Math.ceil(total / vh)));
+  const stride = Math.max(vh, Math.floor((total - vh) / Math.max(1, steps - 1)));
+  for (let i = 0; i < steps; i++) {
+    const y = Math.min(i * stride, total - vh);
+    await page.evaluate((yy) => window.scrollTo(0, yy), y);
+    await page.waitForTimeout(900);
+    const name = `scroll-${String(i + 1).padStart(2, '0')}.png`;
+    await page.screenshot({ path: path.join(dir, name) });
+    files.push(name);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(400);
   return files;
 }
 
@@ -232,8 +273,11 @@ async function captureTarget(browser, target, opts) {
       fs.rmSync(dir, { recursive: true, force: true });
       throw e;
     }
+    await removeIgnored(page, opts.ignore);
     await autoScroll(page);
+    await removeIgnored(page, opts.ignore);
     const screenshots = await segmentedScreenshots(page, dir, 'desktop', 1440, 1800, opts.maxSegments);
+    if (opts.scrollShots) screenshots.push(...(await scrollShots(page, dir, Math.max(opts.maxSegments, 10))));
     const raw = await page.evaluate(extractInPage, { maxEls: 6000 });
 
     let externalCss = { vars: {}, fontFaces: [], keyframes: [] };
@@ -277,7 +321,9 @@ async function captureTarget(browser, target, opts) {
       const mpage = await mctx.newPage();
       try {
         await gotoSettled(mpage, resolved.url, opts.wait);
+        await removeIgnored(mpage, opts.ignore);
         await autoScroll(mpage);
+        await removeIgnored(mpage, opts.ignore);
         screenshots.push(...(await segmentedScreenshots(mpage, dir, 'mobile', 390, 1600, Math.min(4, opts.maxSegments))));
         mobile = await mpage.evaluate(extractMobile);
       } catch (e) {
@@ -334,6 +380,8 @@ async function discover(browser, storeTarget, opts) {
         p.title = info.title;
         p.h1 = info.h1;
         p.demos = info.demos;
+        const slugName = new URL(p.href).pathname.split('/').filter(Boolean).pop();
+        p.videos = info.videos.filter((v) => v.includes(slugName)).concat(info.videos).filter((v, i, a) => a.indexOf(v) === i).slice(0, 2);
         const slug = slugify(new URL(p.href).pathname);
         for (const [i, src] of info.images.slice(0, 3).entries()) {
           try {
@@ -360,13 +408,13 @@ async function discover(browser, storeTarget, opts) {
     '',
     `${products.length} product link(s), ${home.demos.length} demo link(s) on the home page. Screenshot: store-fold.png`,
     '',
-    '| # | product | price | demo links | images |',
-    '| --- | --- | --- | --- | --- |',
-    ...products.map((p, i) => `| ${i + 1} | [${(p.h1 || p.label || p.href).replace(/\|/g, '/')}](${p.href}) | ${p.price || '—'} | ${p.demos.map((d) => `[${d.label || 'demo'}](${d.href})`).join(' ') || (opts.deep ? 'none found' : 'run with --deep')} | ${p.images.join(' ') || '—'} |`),
+    '| # | product | price | demo links | videos | images |',
+    '| --- | --- | --- | --- | --- | --- |',
+    ...products.map((p, i) => `| ${i + 1} | [${(p.h1 || p.label || p.href).replace(/\|/g, '/')}](${p.href}) | ${p.price || '—'} | ${p.demos.map((d) => `[${d.label || 'demo'}](${d.href})`).join(' ') || (opts.deep ? 'none found' : 'run with --deep')} | ${(p.videos || []).map((v) => `[video](${v})`).join(' ') || '—'} | ${p.images.join(' ') || '—'} |`),
     '',
     home.demos.length ? `Demo links on home: ${home.demos.map((d) => `[${d.label || 'demo'}](${d.href})`).join(' · ')}` : '',
     '',
-    'Next: capture the demo URLs (preferred) or, if a product has no public demo, analyse its images.',
+    'Next: capture the demo URLs (preferred). Products without a live demo: run extract_frames.mjs on their video, or analyse their images.',
   ].join('\n');
   fs.writeFileSync(path.join(dir, 'discovery.md'), md);
   console.log(`  ✓ ${path.join(dir, 'discovery.md')}`);
@@ -375,8 +423,27 @@ async function discover(browser, storeTarget, opts) {
 }
 
 // ----------------------------------------------------------------------------- main
+// Rebuilds aggregate + summary.md from an existing capture.json (after improving heuristics).
+function reaggregate(dir) {
+  const file = path.join(dir, 'capture.json');
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const agg = aggregate(data.raw);
+  const pngs = (d) => (fs.existsSync(d) ? fs.readdirSync(d).filter((f) => f.endsWith('.png')).sort() : []);
+  const screenshots = [...pngs(dir), ...pngs(path.join(dir, 'components')).map((f) => `components/${f}`)];
+  const extra = { capturedAt: data.capturedAt, screenshots, hover: data.hover, mobile: data.mobile, externalVars: (data.raw.cssExternal || {}).vars };
+  fs.writeFileSync(file, JSON.stringify({ ...data, aggregate: agg }, null, 2));
+  fs.writeFileSync(path.join(dir, 'summary.md'), summaryMarkdown(data.raw, agg, extra));
+  console.log(`  ✓ ${dir} · ${agg.theme} · card radius ${agg.shape.cardRadius} · base ${agg.spacing.baseUnit || 'irregular'} (4px ${agg.spacing.grid4}%)`);
+  return { slug: path.basename(dir), raw: data.raw, agg };
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
+  if (opts.reaggregate) {
+    const results = opts.targets.filter((t) => fs.existsSync(path.join(t, "capture.json"))).map(reaggregate);
+    if (results.length > 1) fs.writeFileSync(path.join(opts.out, 'catalog-summary.md'), catalogMarkdown(results));
+    return;
+  }
   if (opts.help || (!opts.discover && !opts.targets.length)) {
     console.log(HELP);
     process.exit(opts.help ? 0 : 1);

@@ -52,7 +52,24 @@ muchos parecidos.
 ```bash
 node <skill-dir>/scripts/capture_style.mjs <demo-url-1> <demo-url-2> … --out .captures
 # opciones: --name <slug> (un único target) · --wait <ms> · --max-segments <n> · --no-mobile
+#           --ignore "<selector>"  quita elementos que no son del producto (repetible)
+#           --scroll-shots         capturas de la ventana mientras baja (landings con scroll)
 ```
+
+- **Elementos que añade el host de la demo**: si la tienda inyecta algo propio en cada demo (en
+  codeandchill.store es el botón "Buy this template", `.cc-preview-pill`), quítalo con `--ignore`.
+  Si no, su color y su fuente contaminan las paletas. Si sospechas de uno, busca un color o fuente
+  que se repita idéntico en todas las capturas pero no encaje con la página.
+- **Landings con scroll**: si usan reveal al entrar, vídeo ligado al scroll o secciones fijadas,
+  los tramos `desktop-NN.png` salen con huecos vacíos. Repite con `--scroll-shots`, que guarda
+  `scroll-NN.png` tal como los ve un visitante. Para verlos de un vistazo, únelos en una hoja:
+  `ffmpeg -i scroll-%02d.png -vf "scale=560:-2,tile=4x3" -frames:v 1 scroll-sheet.png`.
+- **Componentes sin demo en vivo**: si solo tienen un vídeo de producto, extrae fotogramas con
+  `node <skill-dir>/scripts/extract_frames.mjs <video-url> --out .captures/components --name <slug>`
+  y lee `sheet.png`. Marca la confianza como `media` y no des hex medidos de lo que solo has
+  visto en vídeo.
+- **Heurísticos mejorados**: si cambias los heurísticos del informe, no hace falta volver a
+  capturar. Ejecuta `capture_style.mjs --reaggregate .captures/<slug> [...]`.
 
 Por cada target genera `.captures/<slug>/` con:
 
@@ -98,7 +115,12 @@ verdad.
 
 Escribe `<destino>/products/<slug>.md` siguiendo `references/product-sheet-template.md` (de esta
 skill) y añade el producto al índice `<destino>/products/README.md`. `<destino>` es la carpeta de
-conocimiento destilado de la tabla de arriba. La sección de
+conocimiento destilado de la tabla de arriba.
+
+**Catálogos grandes** (decenas o cientos de productos): agrupa por **familia visual**. Escribe una
+ficha por familia con la misma plantilla y una tabla "Productos medidos" (una fila por producto
+con bg, superficies, texto/muted, acento, fuente, radio y una nota). Es lo que usa
+`codeandchill-ui` para elegir referencia, y evita repetir 20 veces lo mismo. La sección de
 **señas de identidad** de la ficha es la más importante: son las 3 a 6 decisiones que hacen
 reconocible el producto. Son las que `codeandchill-ui` verificará en cada build.
 

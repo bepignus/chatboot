@@ -25,16 +25,21 @@ bueno.
 
 Después carga también:
 
-- `tokens.css` (y `tailwind.theme.css` / `tailwind.preset.cjs` si existen), de la misma carpeta que
-  la guía.
-- `references/products/README.md`, el índice de fichas por producto.
+- `tokens.css`, `tailwind.theme.css` (v4) y `tailwind.preset.cjs` (v3), de la misma carpeta que la
+  guía. No hace falta leerlos enteros: cópialos al proyecto.
+- `references/products/README.md`, el índice de **familias** (studio-light, studio-dark,
+  studio-glass, editorial, playful y micro-interactions) con los productos medidos de cada una.
 - `references/tokens-contract.md` si vas a cablear los tokens en un proyecto.
 
 ## 2 · Elegir la referencia
 
-Relaciona lo que pide el usuario con el arquetipo más cercano del índice (landing, SaaS, dashboard,
-portfolio, e-commerce…) y lee 1 o 2 fichas de `products/`. Si la guía define **variantes**, elige
-una y dilo. Anota el `capture_dir` de la ficha: lo usarás para comparar en el paso 5.
+1. Elige la **variante** con la tabla "Variantes" de la guía y la columna "úsala para" del índice.
+   Si el usuario no dice nada, aplica la regla por defecto de la guía y dilo en la entrega.
+2. Lee la ficha de esa familia en `products/` y, si hay una acción crítica (pagar, enviar,
+   borrar, verificar), también `products/micro-interactions.md`.
+3. Dentro de la ficha, elige el **producto medido más cercano** al dominio del usuario (por
+   ejemplo, una clínica se parece a `tend`). Úsalo como referencia concreta de valores y para la
+   comparación del paso 5.
 
 ## 3 · Preparar el stack
 
@@ -51,8 +56,10 @@ una y dilo. Anota el `capture_dir` de la ficha: lo usarás para comparar en el p
   - Sin Tailwind: `var(--cc-*)`.
 - A partir de aquí, **nada de hex sueltos** en componentes. Así el estilo se mantiene coherente y
   se puede ajustar en un solo sitio.
-- Carga las fuentes que indique la guía. Si alguna es comercial, usa la alternativa libre que
-  propone la guía.
+- Activa la variante con `data-cc-variant="<variante>"` en `<html>`. Sin el atributo se aplica
+  `studio-light`. Los tokens comunes (motion, datos, avatares) valen para todas.
+- Carga las fuentes de la variante desde Google Fonts (tabla "Tipografía" de la guía): Urbanist
+  en las apps, Instrument Sans o Archivo en editorial, etc.
 
 ## 4 · Construir
 
@@ -89,6 +96,9 @@ node <plugin>/skills/capture-product-style/scripts/capture_style.mjs ./index.htm
 # 2. Compárala con la referencia (si existe .captures/<slug-referencia>/)
 node <plugin>/skills/capture-product-style/scripts/compare_style.mjs .captures/<slug-referencia> .captures/build-<nombre>
 ```
+
+Si no tienes la captura de referencia en local, sácala de la demo: los comandos están en
+`references/products/README.md`. Usa siempre `--ignore .cc-preview-pill`.
 
 1. Corrige los deltas que señalan diferencias de **estilo**: tema, roles de color, fuentes, escala,
    radios, sombras, blur, unidad de espaciado, motion. Ignora los que solo reflejan que el contenido

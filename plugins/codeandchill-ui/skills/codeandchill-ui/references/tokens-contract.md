@@ -28,7 +28,14 @@ nunca se rellena con un valor inventado. Los tokens opcionales solo existen si e
 | espacio | `--cc-space` | unidad base (4 u 8 px) |
 | | `--cc-container`, `--cc-gutter` | ancho máximo y margen lateral |
 | | `--cc-section-y`, `--cc-section-y-mobile` | padding vertical de sección |
-| motion | `--cc-ease`, `--cc-duration-fast`, `--cc-duration`, `--cc-duration-slow` | easing y duraciones |
+| motion | `--cc-ease`, `--cc-ease-expo`, `--cc-duration-fast`, `--cc-duration`, `--cc-duration-slow` | easing y duraciones |
+| acabado | `--cc-ring`, `--cc-ring-hover`? | anillo interior + highlight (sustituye al borde en las apps) |
+| | `--cc-surface-inverse` | la card "tinta" o protagonista |
+| | `--cc-accent-tint` | fondo de píldoras/deltas tintadas |
+| | `--cc-bg-image`?, `--cc-ambient`?, `--cc-sheen`?, `--cc-rule`? | gradiente de fondo, manchas/orbes, brillo de cristal, regla editorial |
+| datos | `--cc-data-1` … `--cc-data-5`, `--cc-positive`, `--cc-negative`, `--cc-warning` | series de gráficos y estados |
+| | `--cc-avatar-1` … `--cc-avatar-5`, `--cc-avatar-ink` | avatares de iniciales |
+| layout | `--cc-gap`, `--cc-card-pad`, `--cc-control-h`, `--cc-control-h-sm` | ritmo interno de apps |
 
 Las variantes del catálogo se declaran como bloques que redefinen los tokens:
 
@@ -66,8 +73,12 @@ Las variantes del catálogo se declaran como bloques que redefinen los tokens:
 }
 ```
 
-Uso: `bg-bg text-fg`, `bg-surface border-border`, `text-muted`, `font-display`, `rounded-lg`,
-`shadow-md`, `ease-cc`…
+Uso: `bg-bg text-fg`, `bg-surface shadow-ring`, `text-muted`, `bg-accent text-on-accent shadow-glow`,
+`font-display`, `rounded-lg`, `ease-cc`, más las utilities `glass` y `hatched`. Los modificadores de
+opacidad (`bg-fg/5`) funcionan en v4 (color-mix); en v3, con colores `var()`, no.
+
+El archivo listo para usar es `tailwind.theme.css` (junto a este contrato); el de v3 es
+`tailwind.preset.cjs`.
 
 Para un HTML suelto sin build, carga `@tailwindcss/browser` con versión exacta y pon el bloque
 `@theme` dentro de `<style type="text/tailwindcss">`.

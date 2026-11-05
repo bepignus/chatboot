@@ -1,0 +1,72 @@
+/*
+ * Tailwind v4 theme for the codeandchill.store catalog.
+ *   @import "tailwindcss";
+ *   @import "./tokens.css";
+ *   @import "./tailwind.theme.css";
+ * Utilities resolve to CSS variables, so switching data-cc-variant restyles everything.
+ */
+@theme inline {
+  --color-bg: var(--cc-bg);
+  --color-surface: var(--cc-surface);
+  --color-surface-2: var(--cc-surface-2);
+  --color-inverse: var(--cc-surface-inverse);
+  --color-border: var(--cc-border);
+  --color-fg: var(--cc-text);
+  --color-muted: var(--cc-text-muted);
+  --color-accent: var(--cc-accent);
+  --color-accent-2: var(--cc-accent-2);
+  --color-on-accent: var(--cc-on-accent);
+  --color-accent-tint: var(--cc-accent-tint);
+  --color-positive: var(--cc-positive);
+  --color-negative: var(--cc-negative);
+  --color-warning: var(--cc-warning);
+  --color-data-1: var(--cc-data-1);
+  --color-data-2: var(--cc-data-2);
+  --color-data-3: var(--cc-data-3);
+  --color-data-4: var(--cc-data-4);
+  --color-data-5: var(--cc-data-5);
+
+  --font-display: var(--cc-font-display);
+  --font-sans: var(--cc-font-body);
+  --font-mono: var(--cc-font-mono);
+
+  --text-xs: var(--cc-text-xs);
+  --text-sm: var(--cc-text-sm);
+  --text-base: var(--cc-text-base);
+  --text-md: var(--cc-text-md);
+  --text-lg: var(--cc-text-lg);
+  --text-xl: var(--cc-text-xl);
+  --text-2xl: var(--cc-text-2xl);
+  --text-3xl: var(--cc-text-3xl);
+  --tracking-tight: var(--cc-tracking-tight);
+  --tracking-wide: var(--cc-tracking-wide);
+  --leading-tight: var(--cc-leading-tight);
+  --leading-body: var(--cc-leading-body);
+
+  --radius-sm: var(--cc-radius-sm);
+  --radius-md: var(--cc-radius-md);
+  --radius-lg: var(--cc-radius-lg);
+  --radius-xl: var(--cc-radius-xl);
+
+  --shadow-sm: var(--cc-shadow-sm);
+  --shadow-md: var(--cc-shadow-md);
+  --shadow-lg: var(--cc-shadow-lg);
+  --shadow-ring: var(--cc-ring);
+  --shadow-glow: var(--cc-glow);
+
+  --ease-cc: var(--cc-ease);
+  --ease-expo: var(--cc-ease-expo);
+  --container-page: var(--cc-container);
+}
+
+/* Small helpers Tailwind can't express from tokens alone */
+@utility glass {
+  background: var(--cc-surface);
+  backdrop-filter: var(--cc-blur);
+  -webkit-backdrop-filter: var(--cc-blur);
+  box-shadow: var(--cc-ring), var(--cc-shadow-lg);
+}
+@utility hatched {
+  /* "forecast / not yet happened" fill used in bar charts (corbel, halden, meridian) */
+  background-image: repeating-linear-gradient(-45deg, currentColor 0 2px, transparent 2px 7px);
+}
