@@ -44,6 +44,12 @@ En versiones anteriores de Claude Code: `/plugin marketplace add bepignus/chatbo
 | `tokens.css` | 8 variantes por `data-cc-variant` |
 | `tailwind.theme.css` / `tailwind.preset.cjs` | Tailwind v4 y v3 |
 
+## Ejemplos
+
+En `examples/` hay dos interfaces construidas por la skill en la validación: el dashboard de un
+estudio de yoga (`studio-light`, 80/100) y la landing de una suscripción de café (`editorial`,
+86/100). Cada una tiene sus capturas.
+
 ## Requisitos
 
 - Node 18+

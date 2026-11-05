@@ -157,8 +157,17 @@ async function removeIgnored(page, selectors) {
   }, selectors);
 }
 
+// CSS `scroll-behavior: smooth` turns every scrollTo into an animation, so screenshots would be
+// taken mid-scroll. Force instant scrolling while we capture.
+async function instantScroll(page) {
+  await page.evaluate(() => {
+    for (const el of [document.documentElement, document.body]) if (el) el.style.setProperty('scroll-behavior', 'auto', 'important');
+  }).catch(() => {});
+}
+
 async function autoScroll(page) {
   // Triggers lazy-loading and scroll-reveal animations, then returns to the top.
+  await instantScroll(page);
   await page.evaluate(async () => {
     const step = Math.max(300, Math.floor(window.innerHeight * 0.8));
     for (let i = 0; i < 60; i++) {
@@ -194,6 +203,7 @@ async function segmentedScreenshots(page, dir, prefix, width, segHeight, maxSegm
 // full-page screenshot. Viewport shots taken while scrolling show what a visitor actually sees.
 async function scrollShots(page, dir, maxShots) {
   const files = [];
+  await instantScroll(page);
   const { total, vh } = await page.evaluate(() => ({ total: document.documentElement.scrollHeight, vh: window.innerHeight }));
   const steps = Math.min(maxShots, Math.max(1, Math.ceil(total / vh)));
   const stride = Math.max(vh, Math.floor((total - vh) / Math.max(1, steps - 1)));

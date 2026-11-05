@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="es" data-cc-variant="editorial">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erre Kafe · Café de especialidad tostado en Bilbao</title>
+<meta name="description" content="Suscripción mensual de café de especialidad tostado cada martes en Bilbao. Un origen nuevo al mes, molido a tu gusto, envío gratis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   TOKENS — copiados de codeandchill-ui/references/tokens.css
+   (ADN común + variante editorial). Es el ÚNICO sitio con hex sueltos.
+   ===================================================================== */
+:root {
+  --cc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cc-ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --cc-duration-fast: 0.2s;
+  --cc-duration: 0.3s;
+  --cc-duration-slow: 0.8s;
+  --cc-radius-full: 9999px;
+  --cc-border-width: 1px;
+  --cc-positive: #1fa855;
+  --cc-negative: #c43636;
+}
+[data-cc-variant="editorial"] {
+  --cc-bg: #ece7dc;                 /* lunde: arena (variante editorial cálida) */
+  --cc-surface: #f6f3ec;
+  --cc-surface-2: #e2dccf;
+  --cc-surface-inverse: #131313;
+  --cc-inverse-hover: #3a3a38;      /* arden: hover del botón negro */
+  --cc-border: #cfc8b9;
+  --cc-rule: 2px solid #201e1d;     /* kessler */
+  --cc-text: #1d221e;               /* lunde */
+  --cc-text-muted: #565a51;         /* lunde · 5.6:1 sobre arena */
+  --cc-accent: #ec3013;             /* kessler */
+  --cc-accent-hover: #dd2b0f;
+  --cc-accent-strong: #b8240c;      /* ajuste AA: el acento en texto pequeño (5.2:1) */
+  --cc-on-accent: #f3f2f2;
+  --cc-accent-tint: rgb(236 48 19 / 0.1);
+  --cc-shadow-md: 0 14px 30px -18px rgb(0 0 0 / 0.35);
+  --cc-shadow-lg: -18px 24px 40px -28px rgb(0 0 0 / 0.35);
+
+  --cc-font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --cc-font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --cc-font-wordmark: "Anton", "Impact", ui-sans-serif, sans-serif;
+  --cc-text-xs: 11px;
+  --cc-text-sm: 13.5px;
+  --cc-text-base: 16px;
+  --cc-text-md: 18px;
+  --cc-text-lg: 22px;
+  --cc-text-xl: 40px;
+  --cc-text-2xl: 71px;
+  --cc-text-3xl: 107px;
+  --cc-leading-tight: 1.05;
+  --cc-leading-body: 1.55;
+  --cc-tracking-tight: -0.025em;
+  --cc-tracking-wide: 0.14em;
+  --cc-radius-sm: 0px;
+  --cc-radius-md: 0px;
+  --cc-radius-lg: 2px;              /* lunde */
+  --cc-space: 4px;
+  --cc-container: 1296px;
+  --cc-gutter: 72px;
+  --cc-section-y: 128px;
+  --cc-section-y-mobile: 72px;
+  --cc-control-h: 44px;
+
+  /* marca Erre Kafe (composiciones propias del saco; sustituir por foto) */
+  --erre-kraft: #c9a27a;
+  --erre-kraft-dark: #a9825c;
+  --erre-coffee: #2a1a10;
+  --erre-crema: #d9b48a;
+  --erre-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --cc-duration-fast: 0.01ms; --cc-duration: 0.01ms; --cc-duration-slow: 0.01ms; }
+}
+
+/* =====================================================================
+   BASE
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--cc-bg);
+  color: var(--cc-text);
+  font-family: var(--cc-font-body);
+  font-size: var(--cc-text-base);
+  line-height: var(--cc-leading-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--cc-accent-strong); outline-offset: 3px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* grano de película (editorial) — steps(6) */
+body::after {
+  content: ""; position: fixed; inset: -50%; z-index: 100; pointer-events: none;
+  background-image: var(--erre-grain); opacity: .07; mix-blend-mode: multiply;
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0,0) } 20% { transform: translate(-3%,2%) } 40% { transform: translate(2%,-3%) }
+  60% { transform: translate(-2%,-1%) } 80% { transform: translate(3%,3%) } 100% { transform: translate(0,0) }
+}
+@media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
+
+.skip {
+  position: absolute; left: 16px; top: -60px; z-index: 200;
+  background: var(--cc-surface-inverse); color: var(--cc-bg);
+  padding: 10px 16px; font-weight: 600; text-decoration: none;
+  transition: top var(--cc-duration) var(--cc-ease);
+}
+.skip:focus { top: 12px; }
+
+.container { width: 100%; max-width: var(--cc-container); margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 768px) { .container { padding-inline: 40px; } }
+@media (min-width: 1200px) { .container { padding-inline: var(--cc-gutter); } }
+.section { padding-block: var(--cc-section-y-mobile); }
+@media (min-width: 1024px) { .section { padding-block: var(--cc-section-y); } }
+
+/* tipografía */
+.eyebrow {
+  font-size: 11.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: var(--cc-tracking-wide); color: var(--cc-accent-strong);
+}
+.display {
+  font-family: var(--cc-font-display); font-weight: 500;
+  letter-spacing: var(--cc-tracking-tight); line-height: var(--cc-leading-tight);
+}
+.h2 { font-size: clamp(38px, 5.4vw, var(--cc-text-2xl)); }
+.hl { color: var(--cc-accent); }
+.lead { font-size: clamp(18px, 1.6vw, var(--cc-text-lg)); color: var(--cc-text-muted); max-width: 46ch; line-height: 1.45; }
+.body { color: var(--cc-text-muted); max-width: 46ch; }
+
+/* botones — rectángulos editoriales */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: var(--cc-control-h); padding: 0 20px; border: 0; border-radius: var(--cc-radius-sm);
+  font: 600 15px/1 var(--cc-font-body); text-decoration: none; cursor: pointer;
+  background: var(--cc-surface-inverse); color: var(--cc-bg);
+  transition: background-color var(--cc-duration-fast) var(--cc-ease), transform var(--cc-duration-fast) var(--cc-ease), color var(--cc-duration-fast) var(--cc-ease);
+}
+.btn:hover { background: var(--cc-inverse-hover); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; }
+.btn--ghost { background: transparent; color: var(--cc-text); box-shadow: inset 0 0 0 1px var(--cc-text); }
+.btn--ghost:hover { background: var(--cc-surface-inverse); color: var(--cc-bg); }
+.btn--lg { height: 52px; padding: 0 26px; font-size: 16.5px; }
+.btn .arrow { transition: transform var(--cc-duration) var(--cc-ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* revelado al hacer scroll */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity var(--cc-duration-slow) var(--cc-ease), transform var(--cc-duration-slow) var(--cc-ease); }
+.reveal.is-in { opacity: 1; transform: none; }
+.no-js .reveal { opacity: 1; transform: none; }
+
+/* =====================================================================
+   BARRA UTILITARIA + HEADER
+   ===================================================================== */
+.utility { background: var(--cc-surface-inverse); color: var(--cc-bg); font-size: 12.5px; }
+.utility .container { display: flex; justify-content: space-between; gap: 16px; padding-block: 8px; }
+.utility p:last-child { display: none; }
+@media (min-width: 768px) { .utility p:last-child { display: block; } }
+.live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--cc-accent); margin-right: 8px; vertical-align: 1px; animation: breathe 2.4s var(--cc-ease) infinite; }
+@keyframes breathe { 0%,100% { opacity: 1; transform: scale(1) } 50% { opacity: .35; transform: scale(.7) } }
+
+.site-header {
+  position: sticky; top: 0; z-index: 50; background: var(--cc-bg);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--cc-duration) var(--cc-ease);
+}
+.site-header.is-stuck { border-bottom-color: var(--cc-border); }
+.header-bar { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+.wordmark { font-family: var(--cc-font-wordmark); font-size: 26px; letter-spacing: .01em; text-decoration: none; line-height: 1; text-transform: uppercase; }
+.wordmark span { color: var(--cc-accent); }
+.nav { display: none; }
+.nav a {
+  font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .16em;
+  text-decoration: none; color: var(--cc-text-muted); padding: 6px 0; position: relative;
+  transition: color var(--cc-duration-fast) var(--cc-ease);
+}
+.nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--cc-duration) var(--cc-ease); }
+.nav a:hover { color: var(--cc-text); }
+.nav a:hover::after { transform: scaleX(1); }
+.header-cta { display: none; height: 40px; font-size: 14px; }
+.menu-btn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; border: 0; background: transparent;
+  color: var(--cc-text); cursor: pointer; box-shadow: inset 0 0 0 1px var(--cc-border);
+}
+.menu-btn:hover { box-shadow: inset 0 0 0 1px var(--cc-text); }
+.mobile-nav { display: none; border-top: 1px solid var(--cc-border); padding: 8px 0 20px; }
+.mobile-nav.is-open { display: block; }
+.mobile-nav a { display: block; padding: 14px 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .16em; text-decoration: none; border-bottom: 1px solid var(--cc-border); }
+.mobile-nav .btn { margin-top: 16px; width: 100%; }
+@media (min-width: 960px) {
+  .nav { display: flex; gap: 32px; }
+  .header-cta { display: inline-flex; }
+  .menu-btn, .mobile-nav, .mobile-nav.is-open { display: none; }
+}
+
+/* =====================================================================
+   HERO
+   ===================================================================== */
+.hero { position: relative; padding-top: 48px; padding-bottom: 96px; }
+.hero-grid { display: grid; gap: 48px; align-items: end; }
+.hero h1 { font-size: clamp(46px, 7.4vw, var(--cc-text-3xl)); margin-top: 20px; }
+.hero .lead { margin-top: 28px; }
+.specs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 28px; font-size: 14.5px; color: var(--cc-text); font-weight: 500; }
+.specs li[aria-hidden] { color: var(--cc-accent); }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.scroll-hint {
+  position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+  font-size: 11px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--cc-text-muted);
+  text-decoration: none; animation: hint 1.8s var(--cc-ease) infinite;
+}
+@keyframes hint { 0%,100% { transform: translate(-50%,0); opacity: 1 } 50% { transform: translate(-50%,6px); opacity: .5 } }
+@media (min-width: 1024px) {
+  .hero { padding-top: 88px; padding-bottom: 128px; }
+  .hero-grid { grid-template-columns: 1.35fr 1fr; gap: 64px; }
+}
+
+/* el saco — composición propia en CSS (placeholder de foto) */
+.bag-stage {
+  position: relative; aspect-ratio: 4 / 5; background: var(--cc-surface-2);
+  display: grid; place-items: center; overflow: hidden; border-radius: var(--cc-radius-lg);
+}
+.bag-stage::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 70%, var(--cc-surface), transparent 70%); }
+.bag {
+  position: relative; width: 58%; aspect-ratio: 3 / 4.3;
+  background: linear-gradient(100deg, var(--erre-kraft-dark) 0%, var(--erre-kraft) 18%, var(--erre-kraft) 78%, var(--erre-kraft-dark) 100%);
+  box-shadow: var(--cc-shadow-lg);
+  clip-path: polygon(4% 6%, 96% 6%, 100% 100%, 0 100%);
+  transform: rotate(-3deg);
+  transition: transform 1s var(--cc-ease);
+}
+.bag-stage:hover .bag { transform: rotate(-1deg) translateY(-6px); }
+.bag::before { /* pliegue superior */
+  content: ""; position: absolute; left: 4%; right: 4%; top: 6%; height: 9%;
+  background: linear-gradient(var(--erre-kraft-dark), var(--erre-kraft));
+  border-bottom: 2px dashed rgb(0 0 0 / .18);
+}
+.bag::after { content: ""; position: absolute; inset: 0; background-image: var(--erre-grain); opacity: .25; mix-blend-mode: multiply; }
+.bag-label {
+  position: absolute; left: 12%; right: 12%; top: 30%; z-index: 1;
+  background: var(--cc-surface); color: var(--cc-text); padding: 14px 14px 12px; text-align: center;
+}
+.bag-label .wm { font-family: var(--cc-font-wordmark); font-size: clamp(26px, 3.4vw, 42px); line-height: .95; text-transform: uppercase; }
+.bag-label .wm span { color: var(--cc-accent); }
+.bag-label .rule { height: 2px; background: var(--cc-text); margin: 10px 0; }
+.bag-label p { font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.5; }
+.bag-label .num { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; text-transform: none; margin-top: 6px; }
+.tag-new {
+  position: absolute; top: 18px; left: 18px; z-index: 2;
+  background: var(--cc-accent-strong); color: var(--cc-on-accent);
+  font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 5px 9px;
+}
+.badge-spin { position: absolute; right: 14px; bottom: 14px; width: 112px; height: 112px; z-index: 2; color: var(--cc-text); }
+.badge-spin svg { width: 100%; height: 100%; animation: spin 16s linear infinite; }
+.badge-spin b { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--cc-font-wordmark); font-size: 26px; color: var(--cc-accent); }
+@keyframes spin { to { transform: rotate(360deg) } }
+@media (prefers-reduced-motion: reduce) { .badge-spin svg, .scroll-hint, .live-dot { animation: none; } }
+.placeholder-note { position: absolute; left: 18px; bottom: 18px; z-index: 2; font-size: 11px; color: var(--cc-text-muted); max-width: 18ch; line-height: 1.35; }
+
+/* =====================================================================
+   WORDMARK FANTASMA + MARQUEE
+   ===================================================================== */
+.ghost {
+  font-family: var(--cc-font-wordmark); text-transform: uppercase; line-height: .82;
+  font-size: clamp(76px, 19vw, 280px); letter-spacing: -0.01em; text-align: center;
+  color: var(--cc-text); white-space: nowrap; user-select: none;
+  border-top: var(--cc-rule); border-bottom: var(--cc-rule); padding: 22px 0 10px; overflow: hidden;
+}
+.ghost span { color: var(--cc-accent); }
+.marquee { overflow: hidden; border-bottom: 1px solid var(--cc-border); padding: 18px 0; }
+.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee ul { display: flex; flex-shrink: 0; }
+.marquee li { font-size: clamp(20px, 2.4vw, 30px); font-weight: 500; letter-spacing: -0.02em; padding-right: 40px; white-space: nowrap; }
+.marquee li::after { content: "✶"; color: var(--cc-accent); padding-left: 40px; }
+@keyframes marquee { to { transform: translateX(-50%) } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* =====================================================================
+   CÓMO FUNCIONA — capítulos numerados
+   ===================================================================== */
+.section-head { display: grid; gap: 24px; margin-bottom: 56px; }
+.section-head h2 { margin-top: 16px; }
+@media (min-width: 1024px) { .section-head { grid-template-columns: 1.3fr 1fr; align-items: end; gap: 64px; margin-bottom: 80px; } }
+.steps { display: grid; border-top: var(--cc-rule); }
+.step { position: relative; padding: 28px 0 36px; border-bottom: 1px solid var(--cc-border); overflow: hidden; }
+.step .n { font-size: 12px; font-weight: 600; letter-spacing: var(--cc-tracking-wide); color: var(--cc-accent-strong); }
+.step h3 { font-size: clamp(26px, 2.6vw, 34px); font-weight: 500; letter-spacing: var(--cc-tracking-tight); line-height: 1.1; margin: 14px 0 12px; }
+.step .ghost-n {
+  position: absolute; right: -6px; bottom: -34px; font-family: var(--cc-font-wordmark);
+  font-size: 170px; line-height: 1; color: var(--cc-text); opacity: .06; pointer-events: none;
+}
+@media (min-width: 768px) { .steps { grid-template-columns: repeat(2, 1fr); } .step { padding-right: 40px; } .step:nth-child(odd) { border-right: 1px solid var(--cc-border); } .step:nth-child(even) { padding-left: 40px; } }
+@media (min-width: 1200px) {
+  .steps { grid-template-columns: repeat(4, 1fr); }
+  .step { padding: 32px 28px 48px; border-right: 1px solid var(--cc-border); }
+  .step:nth-child(even) { padding-left: 28px; }
+  .step:first-child { padding-left: 0; }
+  .step:last-child { border-right: 0; }
+}
+
+/* =====================================================================
+   ORIGEN DEL MES — foto a sangre + stats con pie
+   ===================================================================== */
+.origin { background: var(--cc-surface-inverse); color: var(--cc-bg); }
+.origin .eyebrow { color: var(--erre-crema); }
+.origin .lead, .origin .body { color: var(--erre-crema); }
+.origin-grid { display: grid; gap: 48px; }
+@media (min-width: 1024px) { .origin-grid { grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; } }
+.origin-visual {
+  position: relative; aspect-ratio: 5 / 4; overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 40%, var(--erre-crema) 0 3%, transparent 3.4%),
+    radial-gradient(circle at 62% 28%, var(--erre-kraft) 0 2.4%, transparent 2.8%),
+    radial-gradient(circle at 74% 66%, var(--erre-crema) 0 3.2%, transparent 3.6%),
+    radial-gradient(circle at 18% 78%, var(--erre-kraft) 0 2.6%, transparent 3%),
+    radial-gradient(circle at 46% 70%, var(--erre-crema) 0 2%, transparent 2.4%),
+    linear-gradient(160deg, var(--erre-coffee), var(--cc-surface-inverse));
+}
+.origin-visual::after { content: ""; position: absolute; inset: 0; background-image: var(--erre-grain); opacity: .35; mix-blend-mode: overlay; }
+.origin-visual .coords { position: absolute; left: 20px; bottom: 18px; z-index: 1; font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--erre-crema); }
+.origin-visual .ghost-word { position: absolute; right: -10px; top: -18px; font-family: var(--cc-font-wordmark); font-size: clamp(90px, 13vw, 180px); line-height: 1; color: var(--cc-bg); opacity: .08; text-transform: uppercase; }
+.origin h2 { margin-top: 16px; }
+.origin h2 .hl { color: var(--cc-accent); }
+.notes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.notes li { font-size: 13px; font-weight: 600; padding: 7px 12px; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .25); }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 44px; padding-top: 28px; border-top: 1px solid rgb(255 255 255 / .2); }
+.stat b { display: block; white-space: nowrap; font-size: clamp(26px, 3.4vw, 48px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--cc-bg); }
+.stat span { display: block; margin-top: 10px; font-size: 13px; color: var(--erre-crema); line-height: 1.4; }
+
+/* =====================================================================
+   PLANES + PEDIDO (acción crítica)
+   ===================================================================== */
+.plans-grid { display: grid; gap: 40px; }
+@media (min-width: 1100px) { .plans-grid { grid-template-columns: 1.5fr 1fr; gap: 56px; align-items: start; } }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+.field-label { font-size: 11.5px; font-weight: 600; letter-spacing: var(--cc-tracking-wide); text-transform: uppercase; color: var(--cc-text-muted); margin-bottom: 14px; }
+.plan-cards { display: grid; gap: 12px; }
+@media (min-width: 720px) { .plan-cards { grid-template-columns: repeat(3, 1fr); } }
+.plan { position: relative; display: block; cursor: pointer; }
+.plan input { position: absolute; opacity: 0; pointer-events: none; }
+.plan-body {
+  position: relative; height: 100%; display: flex; flex-direction: column; gap: 6px;
+  padding: 24px 22px 22px; background: var(--cc-surface); border-radius: var(--cc-radius-md);
+  box-shadow: inset 0 0 0 1px var(--cc-border);
+  transition: box-shadow var(--cc-duration-fast) var(--cc-ease), transform var(--cc-duration) var(--cc-ease);
+}
+.plan:hover .plan-body { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--cc-text); }
+.plan input:checked + .plan-body { box-shadow: inset 0 0 0 2px var(--cc-text), var(--cc-shadow-md); }
+.plan input:focus-visible + .plan-body { outline: 2px solid var(--cc-accent-strong); outline-offset: 3px; }
+.plan .name { font-size: 12px; font-weight: 600; letter-spacing: var(--cc-tracking-wide); text-transform: uppercase; }
+.plan .qty { font-size: 34px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; margin-top: 8px; }
+.plan .cups { font-size: 14px; color: var(--cc-text-muted); }
+.plan .price { margin-top: auto; padding-top: 20px; font-size: 15px; color: var(--cc-text-muted); }
+.plan .price b { font-size: 22px; color: var(--cc-text); font-weight: 600; letter-spacing: -0.02em; }
+.plan .check { position: absolute; top: 20px; right: 20px; width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--cc-border); display: grid; place-items: center; transition: background-color var(--cc-duration-fast) var(--cc-ease); }
+.plan input:checked + .plan-body .check { background: var(--cc-surface-inverse); box-shadow: none; }
+.plan input:checked + .plan-body .check::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--cc-bg); }
+.plan .tag-new { position: static; align-self: flex-start; margin-bottom: 6px; }
+
+.segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg { position: relative; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg span {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 16px; cursor: pointer;
+  font-size: 14px; font-weight: 600; background: transparent; box-shadow: inset 0 0 0 1px var(--cc-border);
+  transition: background-color var(--cc-duration-fast) var(--cc-ease), color var(--cc-duration-fast) var(--cc-ease), box-shadow var(--cc-duration-fast) var(--cc-ease);
+}
+.seg span:hover { box-shadow: inset 0 0 0 1px var(--cc-text); }
+.seg input:checked + span { background: var(--cc-surface-inverse); color: var(--cc-bg); box-shadow: none; }
+.seg input:focus-visible + span { outline: 2px solid var(--cc-accent-strong); outline-offset: 3px; }
+.seg small { font-weight: 500; margin-left: 6px; opacity: .75; }
+.options { display: grid; gap: 36px; margin-top: 40px; }
+
+.order {
+  position: relative; background: var(--cc-surface); padding: 28px 24px 26px; border-radius: var(--cc-radius-md);
+  border-top: var(--cc-rule); box-shadow: var(--cc-shadow-md);
+}
+@media (min-width: 1100px) { .order { position: sticky; top: 92px; padding: 32px 32px 30px; } }
+.order h3 { font-size: 26px; font-weight: 500; letter-spacing: var(--cc-tracking-tight); line-height: 1.1; }
+.summary { margin: 22px 0; border-top: 1px solid var(--cc-border); }
+.summary div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--cc-border); font-size: 14.5px; }
+.summary dt { color: var(--cc-text-muted); }
+.summary dd { margin: 0; font-weight: 600; text-align: right; }
+.free { color: var(--cc-positive); }
+.total { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.total .lbl { font-size: 13px; color: var(--cc-text-muted); }
+.total .amount { font-size: clamp(40px, 4vw, 54px); font-weight: 700; letter-spacing: -0.035em; line-height: 1; overflow: hidden; display: inline-flex; }
+.total .amount small { font-size: 16px; font-weight: 500; color: var(--cc-text-muted); letter-spacing: 0; margin-left: 6px; align-self: flex-end; padding-bottom: 6px; }
+.tick { display: inline-block; }
+.tick.up { animation: tick-up var(--cc-duration) var(--cc-ease); }
+@keyframes tick-up { from { transform: translateY(6px); opacity: 0 } to { transform: none; opacity: 1 } }
+.flash { animation: flash .6s var(--cc-ease); }
+@keyframes flash { from { background: var(--cc-accent-tint) } to { background: transparent } }
+
+.input-wrap { margin-top: 24px; }
+.input-wrap label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.input {
+  width: 100%; height: 50px; padding: 0 14px; border: 0; border-radius: var(--cc-radius-sm);
+  background: var(--cc-bg); color: var(--cc-text); font: 500 16px var(--cc-font-body);
+  box-shadow: inset 0 0 0 2px var(--cc-text);
+  transition: box-shadow var(--cc-duration-fast) var(--cc-ease);
+}
+.input::placeholder { color: var(--cc-text-muted); }
+.input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--cc-text), 0 0 0 4px var(--cc-accent-tint); }
+.input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--cc-accent-strong); }
+
+/* ——— Botón "Suscribirme": el botón SE LLENA como una taza.
+   La crema sube ligada al progreso y la etiqueta cambia de tinta al cruzar la línea.
+   Al terminar, cae un sello de tostador sobre el pedido. ——— */
+.brew {
+  position: relative; overflow: hidden; width: 100%; margin-top: 14px;
+  height: 56px; font-size: 16.5px; isolation: isolate;
+}
+.brew .fill { position: absolute; inset: 0; z-index: -1; background: var(--erre-crema); transform: scaleY(0); transform-origin: bottom; }
+.brew .fill::before { /* la superficie de la crema, con ola */
+  content: ""; position: absolute; left: -10%; right: -10%; top: -6px; height: 12px;
+  background: radial-gradient(10px 6px at 10px 6px, var(--erre-crema) 98%, transparent) 0 0 / 20px 12px repeat-x;
+  animation: wave .8s linear infinite;
+}
+@keyframes wave { to { transform: translateX(20px) } }
+.brew[aria-disabled="true"] { opacity: 1; }
+.brew.is-brewing { background: var(--cc-surface-inverse); cursor: progress; }
+.brew.is-brewing .label { color: var(--cc-bg); transition: color var(--cc-duration-fast) var(--cc-ease); }
+.brew.is-brewing.is-past-line .label { color: var(--cc-text); } /* la etiqueta cambia de tinta al cruzar la crema */
+.brew.is-done, .brew.is-done:hover { background: var(--cc-surface-inverse); color: var(--cc-bg); cursor: default; }
+.brew.is-done .fill { display: none; }
+.brew.is-error { animation: nope .4s var(--cc-ease); }
+@keyframes nope { 20%,60% { transform: translateX(-6px) } 40%,80% { transform: translateX(6px) } }
+.helper { min-height: 22px; margin-top: 10px; font-size: 13.5px; color: var(--cc-text-muted); }
+.helper.is-error { color: var(--cc-accent-strong); font-weight: 600; }
+.helper.is-ok { color: var(--cc-text); font-weight: 600; }
+.stamp {
+  position: absolute; right: -10px; top: -52px; z-index: 3; pointer-events: none;
+  width: 112px; height: 112px; background: var(--cc-surface); border-radius: 50%; display: grid; place-items: center; text-align: center;
+  color: var(--cc-accent-strong); box-shadow: inset 0 0 0 3px currentColor, inset 0 0 0 7px var(--cc-surface), inset 0 0 0 8px currentColor;
+  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; line-height: 1.35;
+  opacity: 0; transform: scale(1.4) rotate(-8deg);
+}
+.stamp b { display: block; font-family: var(--cc-font-wordmark); font-weight: 400; font-size: 30px; letter-spacing: 0; line-height: 1; margin: 2px 0; }
+.stamp.is-in { animation: stamp-in .5s var(--cc-ease) forwards; }
+@keyframes stamp-in { 0% { opacity: 0; transform: scale(1.4) rotate(-8deg) } 60% { opacity: 1; transform: scale(.94) rotate(-8deg) } 100% { opacity: .92; transform: scale(1) rotate(-8deg) } }
+@media (prefers-reduced-motion: reduce) { .stamp.is-in { animation: none; opacity: .92; transform: rotate(-8deg); } .brew .fill::before { animation: none; } }
+.fine { margin-top: 16px; font-size: 13px; color: var(--cc-text-muted); }
+
+/* =====================================================================
+   VOCES
+   ===================================================================== */
+.quotes { display: grid; gap: 0; border-top: var(--cc-rule); }
+@media (min-width: 900px) { .quotes { grid-template-columns: repeat(3, 1fr); } }
+.quote { padding: 32px 0; border-bottom: 1px solid var(--cc-border); }
+@media (min-width: 900px) { .quote { padding: 36px 32px 40px; border-bottom: 0; border-right: 1px solid var(--cc-border); } .quote:first-child { padding-left: 0; } .quote:last-child { border-right: 0; } }
+.quote blockquote { margin: 0; font-size: clamp(20px, 1.8vw, 24px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.3; }
+.quote figcaption { margin-top: 22px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.quote figcaption b { display: block; font-weight: 600; }
+.quote figcaption span { color: var(--cc-text-muted); }
+.ava { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: var(--cc-surface-2); font-size: 12px; font-weight: 700; }
+
+/* =====================================================================
+   FAQ
+   ===================================================================== */
+.faq-grid { display: grid; gap: 40px; }
+@media (min-width: 1024px) { .faq-grid { grid-template-columns: 1fr 1.4fr; gap: 72px; } }
+.faq details { border-bottom: 1px solid var(--cc-border); }
+.faq details:first-child { border-top: var(--cc-rule); }
+.faq summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  padding: 22px 0; font-size: 19px; font-weight: 500; letter-spacing: -0.01em;
+  transition: color var(--cc-duration-fast) var(--cc-ease);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--cc-accent-strong); }
+.faq summary .pm { position: relative; flex: none; width: 14px; height: 14px; }
+.faq summary .pm::before, .faq summary .pm::after { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: currentColor; transition: transform var(--cc-duration) var(--cc-ease); }
+.faq summary .pm::after { transform: rotate(90deg); }
+.faq details[open] summary .pm::after { transform: rotate(0); }
+.faq .answer { padding: 0 0 24px; color: var(--cc-text-muted); max-width: 58ch; }
+.faq details[open] .answer { animation: acc-in var(--cc-duration) var(--cc-ease); }
+@keyframes acc-in { from { opacity: 0; transform: translateY(-6px) } }
+
+/* =====================================================================
+   FRANJA FINAL A TODO COLOR + FOOTER
+   ===================================================================== */
+.strip { background: var(--cc-accent); color: var(--cc-on-accent); }
+.strip .container { display: grid; gap: 32px; padding-block: 88px; }
+.strip h2 { font-size: clamp(44px, 7vw, 96px); }
+.strip p { font-size: 19.5px; font-weight: 600; max-width: 40ch; line-height: 1.4; }
+.strip .btn { background: var(--cc-surface-inverse); color: var(--cc-bg); }
+.strip .btn:hover { background: var(--cc-inverse-hover); }
+.strip :focus-visible { outline-color: var(--cc-surface-inverse); }
+@media (min-width: 1024px) { .strip .container { grid-template-columns: 1.5fr 1fr; align-items: end; padding-block: 120px; } }
+
+.footer { padding: 56px 0 40px; font-size: 14px; }
+.footer-grid { display: grid; gap: 32px; }
+@media (min-width: 768px) { .footer-grid { grid-template-columns: 1.4fr repeat(3, 1fr); } }
+.footer h3 { font-size: 11.5px; font-weight: 600; letter-spacing: var(--cc-tracking-wide); text-transform: uppercase; color: var(--cc-text-muted); margin-bottom: 14px; }
+.footer li + li { margin-top: 8px; }
+.footer a { text-decoration: none; }
+.footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.footer .legal { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--cc-border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--cc-text-muted); font-size: 13px; }
+</style>
+</head>
+<body class="no-js">
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<div class="utility" role="note">
+  <div class="container">
+    <p><span class="live-dot" aria-hidden="true"></span><span id="roast-line">Próximo tueste: martes 10 de noviembre · pedidos hasta el lunes a las 20:00</span></p>
+    <p>Envío gratis a toda la península · Recogida en el tostadero</p>
+  </div>
+</div>
+
+<header class="site-header" id="top">
+  <div class="container header-bar">
+    <a class="wordmark" href="#top" aria-label="Erre Kafe, inicio">Erre<span>.</span>Kafe</a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#como">Cómo funciona</a>
+      <a href="#origen">Origen del mes</a>
+      <a href="#planes">Planes</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <a class="btn header-cta" href="#planes">Suscribirme</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menú">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 6h16M2 14h16" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-nav container" id="mobile-nav" aria-label="Principal (móvil)">
+    <a href="#como">Cómo funciona</a>
+    <a href="#origen">Origen del mes</a>
+    <a href="#planes">Planes</a>
+    <a href="#faq">Preguntas</a>
+    <a class="btn" href="#planes">Suscribirme</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ========================== HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow reveal">Tueste nº 47 · Noviembre 2026 · Zorrotzaurre, Bilbao</p>
+        <h1 id="hero-title" class="display reveal">Tostado el <span class="hl">martes.</span> En tu taza el <span class="hl">jueves.</span></h1>
+        <p class="lead reveal">Una suscripción de café de especialidad que tostamos en pequeños lotes a orillas de la ría. Cada mes, un origen nuevo, molido como lo prepares y en tu buzón en 48 horas.</p>
+        <ul class="specs reveal" aria-label="Lo esencial">
+          <li>Desde 14,90 € al mes</li><li aria-hidden="true">•</li>
+          <li>Lotes de 12 kg</li><li aria-hidden="true">•</li>
+          <li>Pausa cuando quieras</li>
+        </ul>
+        <div class="hero-ctas reveal">
+          <a class="btn btn--lg" href="#planes">Elegir mi plan <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--lg btn--ghost" href="#origen">Ver el café de este mes</a>
+        </div>
+      </div>
+
+      <figure class="bag-stage reveal" aria-label="Saco de Erre Kafe, tueste 47, Huila, Colombia">
+        <span class="tag-new">Nuevo origen</span>
+        <div class="bag" aria-hidden="true">
+          <div class="bag-label">
+            <div class="wm">Erre<span>.</span></div>
+            <div class="rule"></div>
+            <p>Huila · Colombia</p>
+            <p>Lavado · 250 g</p>
+            <p class="num">Nº 47</p>
+          </div>
+        </div>
+        <div class="badge-spin" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+            <text font-size="10.5" font-weight="600" letter-spacing="3.2" fill="currentColor"><textPath href="#circ">TOSTADO EN BILBAO · CADA MARTES · </textPath></text>
+          </svg>
+          <b>✶</b>
+        </div>
+        <!-- PLACEHOLDER: sustituye .bag por una foto del saco real (4:5, a sangre) -->
+        <figcaption class="placeholder-note">Composición provisional · sustituir por foto del saco</figcaption>
+      </figure>
+    </div>
+    <a class="scroll-hint" href="#como">Scroll</a>
+  </section>
+
+  <!-- ========================== WORDMARK + MARQUEE -->
+  <div class="container" aria-hidden="true">
+    <div class="ghost">Erre<span>.</span>Kafe</div>
+  </div>
+  <div class="marquee" aria-label="Notas de cata de los últimos tuestes">
+    <div class="marquee-track">
+      <ul>
+        <li>Panela y mandarina</li><li>Cacao y nuez</li><li>Ciruela roja</li><li>Jazmín</li><li>Caramelo tostado</li><li>Bergamota</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li>Panela y mandarina</li><li>Cacao y nuez</li><li>Ciruela roja</li><li>Jazmín</li><li>Caramelo tostado</li><li>Bergamota</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========================== CÓMO FUNCIONA -->
+  <section class="section" id="como" aria-labelledby="como-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Las reglas de la casa</p>
+          <h2 id="como-title" class="display h2 reveal">Cuatro pasos. <span class="hl">Ninguna</span> letra pequeña.</h2>
+        </div>
+        <p class="body reveal">Compramos verde directamente a cuatro fincas, tostamos solo lo vendido y enviamos el mismo miércoles. Así el café llega en su mejor semana, no en su tercer mes de estantería.</p>
+      </div>
+      <ol class="steps">
+        <li class="step reveal">
+          <p class="n">01 · Eliges</p>
+          <h3>Cantidad, molienda y ritmo.</h3>
+          <p class="body">250 g, medio kilo o un kilo. En grano o molido para espresso, moka, V60 o prensa francesa.</p>
+          <span class="ghost-n" aria-hidden="true">01</span>
+        </li>
+        <li class="step reveal">
+          <p class="n">02 · Tostamos</p>
+          <h3>Cada martes, en lotes de 12 kg.</h3>
+          <p class="body">Perfil claro-medio para filtro, un punto más para espresso. Catamos cada lote antes de envasarlo.</p>
+          <span class="ghost-n" aria-hidden="true">02</span>
+        </li>
+        <li class="step reveal">
+          <p class="n">03 · Enviamos</p>
+          <h3>Miércoles a primera hora.</h3>
+          <p class="body">Bilbao y Bizkaia, al día siguiente. Resto de la península, en 48 h. Cabe en el buzón.</p>
+          <span class="ghost-n" aria-hidden="true">03</span>
+        </li>
+        <li class="step reveal">
+          <p class="n">04 · Tú mandas</p>
+          <h3>Pausa, cambia o cancela.</h3>
+          <p class="body">Desde tu cuenta y hasta el lunes a las 20:00 antes de cada tueste. Sin llamadas ni formularios.</p>
+          <span class="ghost-n" aria-hidden="true">04</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========================== ORIGEN DEL MES -->
+  <section class="section origin" id="origen" aria-labelledby="origen-title">
+    <div class="container origin-grid">
+      <div class="origin-visual reveal" role="img" aria-label="Granos de café sobre fondo oscuro (composición provisional)">
+        <span class="ghost-word" aria-hidden="true">Huila</span>
+        <!-- PLACEHOLDER: foto de la finca o de los granos, a sangre -->
+        <span class="coords">2.1966° N · 75.6334° W · Finca La Ventana</span>
+      </div>
+      <div>
+        <p class="eyebrow reveal">Origen del mes · Nº 47</p>
+        <h2 id="origen-title" class="display h2 reveal">Huila, <span class="hl">Colombia.</span></h2>
+        <p class="lead reveal">Lo cultiva la familia Rojas a 1.750 metros, sobre la cordillera Central. Variedad pink bourbon, lavado y secado en camas elevadas durante 21 días.</p>
+        <ul class="notes reveal" aria-label="Notas de cata">
+          <li>Panela</li><li>Mandarina</li><li>Té negro</li><li>Final largo</li>
+        </ul>
+        <div class="stats reveal">
+          <p class="stat"><b>1.750 m</b><span>de altitud en la finca</span></p>
+          <p class="stat"><b>86,5</b><span>puntos SCA en nuestra cata</span></p>
+          <p class="stat"><b>48 h</b><span>del tostador a tu buzón</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== PLANES + PEDIDO -->
+  <section class="section" id="planes" aria-labelledby="planes-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Planes · envío incluido</p>
+          <h2 id="planes-title" class="display h2 reveal">Tu café, <span class="hl">a tu ritmo.</span></h2>
+        </div>
+        <p class="body reveal">Precio cerrado, envío gratis y sin permanencia. El primer saco sale en el próximo tueste.</p>
+      </div>
+
+      <form class="plans-grid" id="order-form" novalidate>
+        <div>
+          <fieldset>
+            <legend class="field-label">1 · Cantidad al mes</legend>
+            <div class="plan-cards">
+              <label class="plan reveal">
+                <input type="radio" name="plan" value="uno" data-price="14.90" data-qty="250 g" checked>
+                <span class="plan-body">
+                  <span class="check" aria-hidden="true"></span>
+                  <span class="name">Solo</span>
+                  <span class="qty">250 g</span>
+                  <span class="cups">≈ 16 tazas · para una persona</span>
+                  <span class="price"><b>14,90 €</b> / mes</span>
+                </span>
+              </label>
+              <label class="plan reveal">
+                <input type="radio" name="plan" value="casa" data-price="26.50" data-qty="2 × 250 g">
+                <span class="plan-body">
+                  <span class="check" aria-hidden="true"></span>
+                  <span class="tag-new">El más pedido</span>
+                  <span class="name">Casa</span>
+                  <span class="qty">2 × 250 g</span>
+                  <span class="cups">≈ 32 tazas · dos orígenes distintos</span>
+                  <span class="price"><b>26,50 €</b> / mes</span>
+                </span>
+              </label>
+              <label class="plan reveal">
+                <input type="radio" name="plan" value="oficina" data-price="44.00" data-qty="1 kg">
+                <span class="plan-body">
+                  <span class="check" aria-hidden="true"></span>
+                  <span class="name">Oficina</span>
+                  <span class="qty">1 kg</span>
+                  <span class="cups">≈ 65 tazas · equipos y estudios</span>
+                  <span class="price"><b>44,00 €</b> / mes</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="options">
+            <fieldset class="reveal">
+              <legend class="field-label">2 · Molienda</legend>
+              <div class="segmented">
+                <label class="seg"><input type="radio" name="grind" value="En grano" checked><span>En grano</span></label>
+                <label class="seg"><input type="radio" name="grind" value="Espresso"><span>Espresso</span></label>
+                <label class="seg"><input type="radio" name="grind" value="Moka"><span>Moka</span></label>
+                <label class="seg"><input type="radio" name="grind" value="V60 / filtro"><span>V60 / filtro</span></label>
+                <label class="seg"><input type="radio" name="grind" value="Prensa francesa"><span>Prensa francesa</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="reveal">
+              <legend class="field-label">3 · Ritmo de envío</legend>
+              <div class="segmented">
+                <label class="seg"><input type="radio" name="freq" value="1" checked><span>Una vez al mes</span></label>
+                <label class="seg"><input type="radio" name="freq" value="2"><span>Cada dos semanas<small>−8 %</small></span></label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <aside class="order reveal" aria-labelledby="order-title">
+          <div class="stamp" id="stamp" aria-hidden="true"><span>Tueste<b>Nº 47</b>Reservado</span></div>
+          <h3 id="order-title">Tu suscripción</h3>
+          <dl class="summary">
+            <div><dt>Cantidad por envío</dt><dd id="s-qty">250 g</dd></div>
+            <div><dt>Molienda</dt><dd id="s-grind">En grano</dd></div>
+            <div><dt>Envíos</dt><dd id="s-freq">1 al mes</dd></div>
+            <div><dt>Envío</dt><dd class="free">Gratis</dd></div>
+          </dl>
+          <div class="total" aria-live="polite">
+            <span class="lbl">Total al mes</span>
+            <span class="amount"><span class="tick" id="s-total">14,90 €</span><small>/ mes</small></span>
+          </div>
+          <div class="input-wrap">
+            <label for="email">Correo electrónico</label>
+            <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="ane@ejemplo.eus" required aria-describedby="helper">
+          </div>
+          <button class="btn brew" id="brew" type="submit">
+            <span class="fill" aria-hidden="true"></span>
+            <span class="label" id="brew-label">Suscribirme</span>
+          </button>
+          <p class="helper" id="helper" role="status">Te enviamos el enlace de pago seguro por correo.</p>
+          <p class="fine">Sin permanencia. Pausa o cancela desde tu cuenta antes del lunes a las 20:00.</p>
+        </aside>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========================== VOCES -->
+  <section class="section" aria-labelledby="voces-title" style="padding-top:0">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">612 personas suscritas</p>
+          <h2 id="voces-title" class="display h2 reveal">Lo que dicen en <span class="hl">la barra.</span></h2>
+        </div>
+      </div>
+      <div class="quotes">
+        <figure class="quote reveal">
+          <blockquote>“El jueves por la mañana suena el buzón y ya sé qué voy a desayunar. El de Etiopía de septiembre todavía lo echo de menos.”</blockquote>
+          <figcaption><span class="ava" aria-hidden="true">IA</span><span><b>Itziar Agirre</b><span>Deusto · plan Solo desde 2024</span></span></figcaption>
+        </figure>
+        <figure class="quote reveal">
+          <blockquote>“Somos nueve en el estudio y el kilo dura justo el mes. Lo pausamos en agosto con dos clics.”</blockquote>
+          <figcaption><span class="ava" aria-hidden="true">MB</span><span><b>Mikel Barrenetxea</b><span>Estudio en Bilbao La Vieja · plan Oficina</span></span></figcaption>
+        </figure>
+        <figure class="quote reveal">
+          <blockquote>“Me lo muelen para moka y por fin no sabe a quemado. Se nota que está recién tostado.”</blockquote>
+          <figcaption><span class="ava" aria-hidden="true">LO</span><span><b>Lucía Ortega</b><span>Getxo · plan Casa</span></span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== FAQ -->
+  <section class="section faq" id="faq" aria-labelledby="faq-title" style="padding-top:0">
+    <div class="container faq-grid">
+      <div>
+        <p class="eyebrow reveal">Preguntas</p>
+        <h2 id="faq-title" class="display h2 reveal">Antes de la <span class="hl">primera taza.</span></h2>
+      </div>
+      <div>
+        <details>
+          <summary>¿Cuándo llega mi primer saco?<span class="pm" aria-hidden="true"></span></summary>
+          <p class="answer">Si te suscribes antes del lunes a las 20:00, tu café entra en el tueste del martes, sale el miércoles y llega el jueves. Si no, entra en el de la semana siguiente.</p>
+        </details>
+        <details>
+          <summary>¿Puedo pausar o cancelar?<span class="pm" aria-hidden="true"></span></summary>
+          <p class="answer">Sí, desde tu cuenta y sin dar explicaciones. Puedes saltarte un mes, cambiar la molienda o darte de baja hasta el lunes anterior a cada tueste.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si un origen no me gusta?<span class="pm" aria-hidden="true"></span></summary>
+          <p class="answer">Escríbenos. Te mandamos otro origen en el siguiente envío sin coste y apuntamos tus preferencias para que no vuelva a pasar.</p>
+        </details>
+        <details>
+          <summary>¿Puedo recogerlo en el tostadero?<span class="pm" aria-hidden="true"></span></summary>
+          <p class="answer">Sí. Los miércoles de 8:00 a 14:00 en nuestro tostadero de Zorrotzaurre. Al hacer el pedido eliges "Recogida".</p>
+        </details>
+        <details>
+          <summary>¿Es café de comercio directo?<span class="pm" aria-hidden="true"></span></summary>
+          <p class="answer">Compramos a cuatro fincas en Colombia, Etiopía, Perú y Honduras, y pagamos de media un 40 % por encima del precio de mercado. Publicamos cada factura en la ficha del origen.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== FRANJA FINAL -->
+  <section class="strip" aria-labelledby="strip-title">
+    <div class="container">
+      <h2 id="strip-title" class="display">El martes tostamos. ¿Te apuntamos?</h2>
+      <div>
+        <p>Primer saco con molinillo de mano de regalo para las primeras 50 suscripciones de noviembre.</p>
+        <a class="btn btn--lg" href="#planes" style="margin-top:24px">Elegir mi plan <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="wordmark" href="#top">Erre<span>.</span>Kafe</a>
+        <p class="body" style="margin-top:14px">Tostadero de café de especialidad. Zorrotzaurre, Bilbao. Desde 2021.</p>
+      </div>
+      <div>
+        <h3>Suscripción</h3>
+        <ul><li><a href="#planes">Planes</a></li><li><a href="#origen">Origen del mes</a></li><li><a href="#faq">Preguntas</a></li></ul>
+      </div>
+      <div>
+        <h3>Tostadero</h3>
+        <ul><li>Calle de la Ribera de Deusto, 70 <!-- PLACEHOLDER: dirección real --></li><li>Miércoles 8:00–14:00</li><li><a href="mailto:kaixo@errekafe.example">kaixo@errekafe.example</a></li></ul>
+      </div>
+      <div>
+        <h3>Síguenos</h3>
+        <ul><li><a href="#">Instagram</a></li><li><a href="#">Boletín de cata</a></li></ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Erre Kafe</span>
+      <span><a href="#">Aviso legal</a> · <a href="#">Privacidad</a> · <a href="#">Condiciones</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  document.body.classList.remove('no-js');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- revelado al hacer scroll */
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }) : null;
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    if (!io || reduce) { el.classList.add('is-in'); return; }
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    io.observe(el);
+  });
+
+  /* ---------- header con línea al despegar + menú móvil */
+  const header = document.querySelector('.site-header');
+  const onScroll = () => header.classList.toggle('is-stuck', scrollY > 8);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  const menuBtn = document.querySelector('.menu-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  const setMenu = (open) => {
+    mobileNav.classList.toggle('is-open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  };
+  menuBtn.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+  mobileNav.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) { setMenu(false); menuBtn.focus(); } });
+
+  /* ---------- próximo tueste: el martes que viene (cierre el lunes a las 20:00) */
+  const fmt = (d, o) => d.toLocaleDateString('es-ES', o);
+  const nextRoast = (() => {
+    const now = new Date();
+    const d = new Date(now); d.setHours(0, 0, 0, 0);
+    let add = (2 - d.getDay() + 7) % 7; // 2 = martes
+    const cutoff = new Date(d); cutoff.setDate(d.getDate() + add - 1); cutoff.setHours(20);
+    if (add === 0 || now > cutoff) add += 7;
+    d.setDate(d.getDate() + add);
+    return d;
+  })();
+  const arrival = new Date(nextRoast); arrival.setDate(nextRoast.getDate() + 2);
+  const roastTxt = fmt(nextRoast, { weekday: 'long', day: 'numeric', month: 'long' });
+  const arrivalTxt = fmt(arrival, { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('roast-line').textContent = `Próximo tueste: ${roastTxt} · pedidos hasta el lunes a las 20:00`;
+
+  /* ---------- configurador: el número "tick" cuando cambia */
+  const form = document.getElementById('order-form');
+  const eur = (n) => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  const out = { qty: s('s-qty'), grind: s('s-grind'), freq: s('s-freq'), total: s('s-total') };
+  function s(id) { return document.getElementById(id); }
+  function update() {
+    const plan = form.querySelector('[name=plan]:checked');
+    const grind = form.querySelector('[name=grind]:checked').value;
+    const freq = Number(form.querySelector('[name=freq]:checked').value);
+    const total = Number(plan.dataset.price) * freq * (freq === 2 ? 0.92 : 1);
+    out.qty.textContent = plan.dataset.qty;
+    out.grind.textContent = grind;
+    out.freq.textContent = freq === 2 ? '2 al mes' : '1 al mes';
+    const next = eur(Math.round(total * 100) / 100);
+    if (out.total.textContent !== next) {
+      out.total.textContent = next;
+      if (!reduce) {
+        out.total.classList.remove('up'); void out.total.offsetWidth; out.total.classList.add('up');
+        const amount = out.total.parentElement;
+        amount.classList.remove('flash'); void amount.offsetWidth; amount.classList.add('flash');
+      }
+    }
+  }
+  form.addEventListener('change', (e) => { if (e.target.name !== 'email') update(); });
+  update();
+
+  /* ---------- acción crítica: el botón se llena como una taza y cae el sello del tueste */
+  const brew = document.getElementById('brew');
+  const label = document.getElementById('brew-label');
+  const fill = brew.querySelector('.fill');
+  const email = document.getElementById('email');
+  const helper = document.getElementById('helper');
+  const stamp = document.getElementById('stamp');
+  let busy = false;
+
+  email.addEventListener('input', () => {
+    if (email.getAttribute('aria-invalid') === 'true' && email.validity.valid) {
+      email.removeAttribute('aria-invalid');
+      helper.className = 'helper';
+      helper.textContent = 'Te enviamos el enlace de pago seguro por correo.';
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (busy || brew.classList.contains('is-done')) return;
+    if (!email.value.trim() || !email.validity.valid) {
+      email.setAttribute('aria-invalid', 'true');
+      helper.className = 'helper is-error';
+      helper.textContent = email.value.trim() ? 'Ese correo no parece completo · revisa la @ y el dominio' : 'Escribe tu correo para reservar el saco';
+      brew.classList.remove('is-error'); void brew.offsetWidth; brew.classList.add('is-error');
+      email.focus();
+      return;
+    }
+    busy = true;
+    brew.classList.add('is-brewing');
+    brew.setAttribute('aria-disabled', 'true');
+    helper.className = 'helper';
+    const finish = () => {
+      // TODO: aquí va la llamada real al backend / pasarela de pago
+      busy = false;
+      brew.classList.remove('is-brewing', 'is-past-line');
+      brew.classList.add('is-done');
+      label.textContent = '✓ Suscripción reservada';
+      helper.className = 'helper is-ok';
+      helper.textContent = `Tu primer saco se tuesta el ${roastTxt} y llega el ${arrivalTxt}. Revisa tu correo.`;
+      stamp.classList.add('is-in');
+    };
+    if (reduce) { finish(); return; }
+    const dur = 1700, t0 = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      fill.style.transform = `scaleY(${eased})`;
+      brew.classList.toggle('is-past-line', eased > 0.55);
+      label.textContent = `Llenando tu taza · ${Math.round(eased * 100)} %`;
+      if (p < 1) requestAnimationFrame(step); else finish();
+    };
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+</body>
+</html>

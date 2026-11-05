@@ -134,8 +134,10 @@ function compare(ref, cand) {
     deltas.push(`spacing · base unit: reference is a ${R.spacing.baseUnit}px grid, candidate is ${C.spacing.baseUnit ? C.spacing.baseUnit + 'px' : 'irregular'}`);
     l -= 20;
   }
-  const rmw = px((R.layout.maxWidths[0] || {}).value);
-  const cmw = px((C.layout.maxWidths[0] || {}).value);
+  // The page container is the widest max-width in use (>= 900px), not the most frequent one.
+  const container = (cap) => Math.max(0, ...cap.layout.maxWidths.map((m) => px(m.value)).filter((n) => n >= 900));
+  const rmw = container(R);
+  const cmw = container(C);
   if (rmw && cmw && Math.abs(rmw - cmw) / rmw > 0.1) {
     deltas.push(`layout · main container max-width: ${cmw}px → ~${rmw}px`);
     l -= 20;
@@ -153,11 +155,19 @@ function compare(ref, cand) {
   }
   scores.layout = clamp(l);
 
-  // Motion
+  // Motion: judge presence and easing family, not how many transitions each page happens to have.
   const rm = R.motion.transitions.length + R.motion.animations.length;
   const cm = C.motion.transitions.length + C.motion.animations.length;
-  scores.motion = rm === 0 && cm === 0 ? 100 : clamp(100 - Math.abs(rm - cm) * 8);
+  const easings = (cap) => new Set(cap.motion.transitions.flatMap((t) => String(t.value).match(/cubic-bezier\([^)]*\)|ease-in-out|ease-out|ease-in|linear|ease/g) || []));
+  const re = easings(R);
+  const ce = easings(C);
+  const sharedEase = [...re].some((e) => ce.has(e));
+  if (rm === 0 && cm === 0) scores.motion = 100;
+  else if (rm > 0 && cm === 0) scores.motion = 20;
+  else if (rm === 0) scores.motion = 85;
+  else scores.motion = sharedEase ? 100 : 75;
   if (rm > 0 && cm === 0) deltas.push('motion · reference has transitions/animations; candidate is static');
+  if (rm > 0 && cm > 0 && !sharedEase && re.size) deltas.push(`motion · easing: reference uses ${[...re].slice(0, 2).join(' / ')}`);
   const refHover = (ref.hover || []).filter((h) => Object.keys(h.diff).length);
   const candHover = (cand.hover || []).filter((h) => Object.keys(h.diff).length);
   if (refHover.length && !candHover.length) deltas.push(`motion · buttons/cards change on hover in the reference (${Object.keys(refHover[0].diff).join(', ')}); candidate has no hover change`);

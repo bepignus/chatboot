@@ -41,6 +41,8 @@ export function aggregate(raw) {
     ...border.map((c) => ({ hex: c.hex, weight: c.pct * 0.4 })),
     ...buttonBgs.map((hex) => ({ hex, weight: 25 })),
   ].filter((c) => chroma(c.hex) >= 18);
+  // Presence × a mild saturation bonus. Evaluated against 18 hand-labelled captures (17/18 correct);
+  // stronger saturation weighting picks small red "negative delta" pills over dark teal CTAs.
   const chromatic = clusterColors(pool, 10).map((c) => ({ ...c, score: c.weight * (1 + chroma(c.hex) / 60) })).sort((a, b) => b.score - a.score);
   const accent = chromatic[0] ? chromatic[0].hex : null;
   const accents = chromatic.filter((c, i) => i === 0 || deltaE(c.hex, chromatic[0].hex) > 18).slice(0, 4).map((c) => c.hex);

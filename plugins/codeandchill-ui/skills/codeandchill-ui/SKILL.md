@@ -100,6 +100,12 @@ node <plugin>/skills/capture-product-style/scripts/compare_style.mjs .captures/<
 Si no tienes la captura de referencia en local, sácala de la demo: los comandos están en
 `references/products/README.md`. Usa siempre `--ignore .cc-preview-pill`.
 
+Si el producto de referencia usa una fuente o un acento propios que no son los tokens de su
+familia (por ejemplo, `tend` usa Geist y `studio-light` usa Urbanist), esos deltas son
+esperables. Compara también con el producto que comparte los tokens por defecto: corbel o
+murmura (`studio-light`), plotta o rivet (`studio-dark`), cirrel (`studio-glass`), arden
+(`editorial`), vanta (`editorial-dark`) o nocturne (`playful`).
+
 1. Corrige los deltas que señalan diferencias de **estilo**: tema, roles de color, fuentes, escala,
    radios, sombras, blur, unidad de espaciado, motion. Ignora los que solo reflejan que el contenido
    o el layout son legítimamente distintos.
