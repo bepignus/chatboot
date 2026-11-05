@@ -14,11 +14,11 @@ Hace dos cosas:
 ## Instalación
 
 ```
-/plugin install codeandchill-ui --marketplace bepignus/chatboot
+/plugin install codeandchill-ui --marketplace bepignus/ui-style-skills
 ```
 
-En versiones anteriores de Claude Code: `/plugin marketplace add bepignus/chatboot` y luego
-`/plugin install codeandchill-ui@chatboot`.
+En versiones anteriores de Claude Code: `/plugin marketplace add bepignus/ui-style-skills` y luego
+`/plugin install codeandchill-ui@ui-style-skills`.
 
 ## Contenido
 

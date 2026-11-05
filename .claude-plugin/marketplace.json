@@ -1,10 +1,10 @@
 {
-  "name": "chatboot",
+  "name": "ui-style-skills",
   "owner": {
     "name": "bepignus"
   },
   "metadata": {
-    "description": "Plugins de Claude Code de bepignus."
+    "description": "Plugins de Claude Code que enseñan a Claude estilos de interfaz concretos."
   },
   "plugins": [
     {

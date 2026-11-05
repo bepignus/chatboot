@@ -1,6 +1,7 @@
-# chatboot · plugins de Claude Code
+# ui-style-skills · plugins de Claude Code
 
-Marketplace de plugins de Claude Code. Por ahora contiene uno:
+Marketplace de plugins de Claude Code que enseñan a Claude estilos de interfaz concretos. Por
+ahora contiene uno:
 
 - **[codeandchill-ui](plugins/codeandchill-ui/)**: desarrolla interfaces con el estilo de las
   plantillas que se venden en codeandchill.store. Captura su ADN visual de las demos y lo aplica
@@ -11,8 +12,8 @@ Marketplace de plugins de Claude Code. Por ahora contiene uno:
 En Claude Code:
 
 ```
-/plugin marketplace add bepignus/chatboot
-/plugin install codeandchill-ui@chatboot
+/plugin marketplace add bepignus/ui-style-skills
+/plugin install codeandchill-ui@ui-style-skills
 ```
 
 Sin marketplace, copia las skills a tu carpeta personal:
